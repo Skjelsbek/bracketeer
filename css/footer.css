@@ -2,26 +2,29 @@
 footer {
   background-color: #181b2b;
   border-top: orange 3px solid;
+
 }
+
+
 
 /* Footer flexbox*/
 .flex_container {
   display: flex;
-  text-align: left;
+  text-align: center;
   color: lightgrey;
   flex-wrap: wrap;
+    float: bottom;
 }
 
 .flex_container h3 {
   color: orange;
 }
 
-.support_box {
-  flex: 1;
-}
 
-.explore_box, .resource_box {
+
+.support_box ,.explore_box, .resource_box {
   flex: 1;
+  margin: 10px;
 }
 
 .explore_box a, .resource_box a{
