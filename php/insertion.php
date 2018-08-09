@@ -1,6 +1,9 @@
 <?php
   class Insertion {
+    // Database connection
     private $mysqli;
+
+    // Tournament data
     private $tname;
     private $sname;
     private $format;
@@ -89,7 +92,7 @@
       return $teams;
     }
 
-    // Insert into tournaments
+    // Insert into tournaments tbl
     function insert_tournament()
     {
       // Fetching user id
@@ -100,7 +103,7 @@
       $tmp_user_id = $result->fetch_assoc();
       $this->user_id = $tmp_user_id['id'];
 
-      // Insert tournament
+      // Insert tournaments
       $sql = "INSERT INTO tournaments (name, sport, format, users_id)
               VALUES ('" . $this->tname . "','" . $this->sname . "','" . $this->format . "'," . $this->user_id . ");";
       $this->mysqli->query($sql) or die($this->mysqli->error);
@@ -109,7 +112,7 @@
       $this->tournament_id = $this->mysqli->insert_id;
     }
 
-    // Insert teams
+    // Insert teams tbl
     function insert_teams()
     {
       // Insert teams
@@ -124,7 +127,7 @@
       $this->last_team_id = $this->mysqli->insert_id;
     }
 
-    // Insert participants
+    // Insert participants tbl
     function insert_participants()
     {
       // Insert participants
@@ -139,7 +142,7 @@
       }
     }
 
-    // Insert matches
+    // Insert matches tbl
     function insert_matches()
     {
       // Calculate number of matches
@@ -195,20 +198,57 @@
       {
         // Calculate number of byes
         $closest_pow_of_two = count($this->teams);
-        while (!$this->is_decimal(log($closest_pow_of_two)/log(2)))
+        while ($this->is_decimal(log($closest_pow_of_two)/log(2)))
         {
           $closest_pow_of_two++;
         }
         $number_of_byes = $closest_pow_of_two - count($this->teams);
 
-        $split_count = 1;
-        for ($i=1; $i < $number_of_byes; $i++)
-        {
-          if ($i%4 == 0)
-          {
-            $split_count++;
-          }
+        // Middle and last index of team array
+        $middle = ceil(count($this->teams)/2) - 1;
+        $last = count($this->teams) - 1;
+
+        // Bye array and counter
+        $byes = array();
+        $byes_left = $number_of_byes;
+
+        for ($i=0; $i < count($this->teams); $i++) {
+          $byes[$i] = false;
         }
+
+        // Calculating byes
+        $i = 0;
+        while ($byes_left != 0)
+        {
+          $j = 0;
+          while ($j < 4 && $byes_left != 0)
+          {
+            switch ($j)
+            {
+              case 0:
+                $byes[$last - $i] = true;
+                break;
+              case 1:
+                $byes[0 + $i] = true;
+                break;
+              case 2:
+                $byes[$middle + 1 + $i] = true;
+                break;
+              case 3:
+                $byes[$middle - $i] = true;
+                break;
+              default:
+                echo "Hope this never happens";
+                die();
+                break;
+            }
+            $j++;
+            $byes_left--;
+          }
+          $i++;
+        }
+
+        die();
       }
       return $this->tournament_id;
     }
