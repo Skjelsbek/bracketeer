@@ -34,7 +34,7 @@
 			$_SESSION['admin_status'] = $result["admin_status"];
 
 			// Relocation to home screen with a login status of success
-			header("Location: ../?page=tournaments&login=success");
+			header("Location: ../?page=my_tournaments&login=success");
 		}
 		else
 		{

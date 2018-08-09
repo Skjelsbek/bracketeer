@@ -32,7 +32,7 @@
                 '<li class="dropdown">
                   <a class="dropbtn">' . $_SESSION['uname'] . '</a>
                   <div class="drop-content">
-                    <a href="?page=tournaments">Tournaments</a>
+                    <a href="?page=my_tournaments">My Tournaments</a>
                     <form id="logout_form" action="./php/logout.php" method="post">
                       <input id="logout_button" type="submit" value="Log Out">
                     </form>

@@ -12,9 +12,9 @@
     <input type="text" id="sname" placeholder="Sport being played" name="sname">
 
     <select name="format">
-      <option value="single">Single Elimination</option>
-      <option value="double">Double Elimination</option>
-      <option value="rr">Round Robin</option>
+      <option value="Single Elimination">Single Elimination</option>
+      <option value="Double Elimination">Double Elimination</option>
+      <option value="Round Robin">Round Robin</option>
     </select>
 
     <textarea id="participantsta" name="participants" rows="8" cols="80"></textarea>

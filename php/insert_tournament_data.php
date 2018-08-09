@@ -32,9 +32,9 @@
     $insertion->insert_teams();
     $insertion->insert_participants();
     $insertion->insert_matches();
-    $tournament_id = $insertion->insert_bracket();
+    $insertion->insert_bracket();
 
-    header("Location: ../?page=tournament&tournament" . $tournament_id);
+    header("Location: ../?page=tournament&tournament=" . $_POST['tname']);
   }
   else
   {

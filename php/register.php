@@ -33,6 +33,6 @@
 	$mysqli->query($sql) or die($mysqli->error);
 
 	// Returns to the home page with registration success
-	header("Location: ../?page=tournaments&registration=success");
+	header("Location: ../?page=home&registration=success");
 	die();
 ?>
