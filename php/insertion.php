@@ -1,5 +1,6 @@
 <?php
-  class Insertion {
+  class Insertion
+  {
     // Database connection
     private $mysqli;
 
@@ -191,7 +192,7 @@
       $byes_left = $number_of_byes;
 
       for ($i=0; $i < count($this->teams); $i++) {
-        $byes[$i] = false;
+        $byes[$i] = 0;
       }
 
       // Calculating byes
@@ -204,16 +205,16 @@
           switch ($j)
           {
             case 0:
-              $byes[$last - $i] = true;
+              $byes[$last - $i] = 1;
               break;
             case 1:
-              $byes[0 + $i] = true;
+              $byes[0 + $i] = 1;
               break;
             case 2:
-              $byes[$middle + 1 + $i] = true;
+              $byes[$middle + 1 + $i] = 1;
               break;
             case 3:
-              $byes[$middle - $i] = true;
+              $byes[$middle - $i] = 1;
               break;
             default:
               echo "Hope this never happens";
@@ -260,7 +261,7 @@
 
         for ($i=0; $i < count($this->teams); $i++)
         {
-          if (!isset($byes[$i]))
+          if ($byes[$i] == 0)
           {
             if ($added_teams == 2)
             {
@@ -274,20 +275,34 @@
           }
         }
 
-        for ($i=0; $i < count($this->teams); $i++)
+        $tmp = array();
+        $j = 0;
+        for ($i=0; $i < count($byes); $i++)
         {
-          if (isset($byes[$i]))
+          if ($byes[$i] == 0)
           {
-            if ($added_teams == 2)
-            {
-              $added_teams = 0;
-              $match_id++;
-            }
+            $i++;
+          }
+          $tmp[$j] = $byes[$i];
+          $j++;
+        }
+
+        $byes = $tmp;
+
+        for ($i=0; $i < count($byes); $i++)
+        {
+          if ($added_teams == 2)
+          {
+            $added_teams = 0;
+            $match_id++;
+          }
+          if ($byes[$i] == 1)
+          {
             $sql = "INSERT INTO bracket (matches_tournaments_id, matches_id, teams_id)
             VALUES (" . $this->tournament_id . "," .  $match_id . "," . $team_id++ . ");";
             $this->mysqli->query($sql) or die($this->mysqli->error);
-            $added_teams++;
           }
+          $added_teams++;
         }
       }
     }
