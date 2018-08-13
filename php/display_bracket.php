@@ -5,9 +5,14 @@
     private $tournament_data;
 
     // Constructor
-    function __construct($mysqli, $tournament_id, $tournament_format)
+    function __construct($mysqli, $tournament_id, $tournament_name, $tournament_sport, $tournament_format)
     {
       $this->mysqli = $mysqli;
+
+      echo "<div class='container'>";
+      echo "<h1>" . $tournament_name . "</h1>";
+      echo "<p> " . $tournament_sport . " - " . $tournament_format;
+      echo "<br>";
 
       // Fetching tournament data from db
       $sql = "SELECT m.id 'match', p.name 'participant', t.id 'team'
@@ -18,7 +23,8 @@
                 ON t.id = b.teams_id
               LEFT OUTER JOIN participants p
                ON p.teams_id = t.id
-              WHERE m.tournaments_id = " . $tournament_id . ";";
+              WHERE m.tournaments_id = " . $tournament_id . "
+              ORDER BY m.id DESC;";
       $result = $this->mysqli->query($sql) or die($this->mysqli->error);
 
       // Converting tournament data into readable array
@@ -41,8 +47,10 @@
       }
       else
       {
-        $this->display_rr_elim();
+        $this->display_rr();
       }
+
+      echo "</div>";
     }
 
     private function display_single_elim()
@@ -55,7 +63,7 @@
       echo "Double Elimination!";
     }
 
-    private function display_rr_elim()
+    private function display_rr()
     {
       echo "Round Robin!";
     }

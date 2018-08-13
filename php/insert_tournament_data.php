@@ -17,7 +17,8 @@
     // If one of the tournaments fetched have the same name as the one to create, prompt already exists
     while ($row = $result->fetch_assoc())
     {
-      if ($row['name'] == $_POST['tname']) {
+      if ($row['name'] == $_POST['tname'])
+      {
         header("Location: ../?page=create_tournament&tournament_exists");
         die();
       }
@@ -27,12 +28,7 @@
     $partarr = explode("\n", str_replace("\r", "", $_POST['participants']));
 
     // Inserting tournament data in db
-    $insertion = new Insertion($mysqli, $_POST['tname'], $_POST['sname'], $_POST['format'], $partarr, $_POST['team_size'], isset($_POST['randomize_teams']), isset($_POST['randomize_seeds']));
-    $insertion->insert_tournament();
-    $insertion->insert_teams();
-    $insertion->insert_participants();
-    $insertion->insert_matches();
-    $insertion->insert_bracket();
+    new Insertion($mysqli, $_POST['tname'], $_POST['sname'], $_POST['format'], $partarr, $_POST['team_size'], isset($_POST['randomize_teams']), isset($_POST['randomize_seeds']));
 
     header("Location: ../?page=tournament&tournament=" . $_POST['tname']);
   }

@@ -21,20 +21,11 @@
               WHERE users_id = " . $user_id . "
               AND name = '" . $tournament_name . "';";
       $result = $mysqli->query($sql) or die($mysqli->error);
-      $row = $result->fetch_assoc();
+      $result = $result->fetch_assoc();
 
-      $tournament_id = $row['id'];
-      $tournament_sport =$row ['sport'];
-      $tournament_format = $row['format'];
-
-      if (isset($row))
+      if (isset($result))
       {
-        echo "<div class='container'>";
-        echo "<h1>" . $tournament_name . "</h1>";
-        echo "<p> " . $tournament_sport . " - " . $tournament_format;
-        echo "</div>";
-
-        $display_bracket = new Display_bracket($mysqli, $tournament_id, $tournament_format);                        
+        new Display_bracket($mysqli, $result['id'], $tournament_name, $result ['sport'], $result['format']);        
       }
       else
       {

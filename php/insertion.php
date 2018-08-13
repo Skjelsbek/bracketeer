@@ -45,6 +45,20 @@
       {
         $this->teams = $this->sort_teams();
       }
+
+      $this->insert_tournament();
+      $this->insert_teams();
+      $this->insert_participants();
+      $this->insert_matches();
+
+      if ($this->format != "Round Robin")
+      {
+        $this->insert_bracket();
+      }
+      else
+      {
+        $this->insert_bracket_rr();
+      }
     }
 
     // Check if a number is decimal
@@ -94,7 +108,7 @@
     }
 
     // Insert into tournaments tbl
-    function insert_tournament()
+    private function insert_tournament()
     {
       // Fetching user id
       $sql = "SELECT id
@@ -114,7 +128,7 @@
     }
 
     // Insert teams tbl
-    function insert_teams()
+    private function insert_teams()
     {
       // Insert teams
       for ($i=0; $i < count($this->teams); $i++)
@@ -129,7 +143,7 @@
     }
 
     // Insert participants tbl
-    function insert_participants()
+    private function insert_participants()
     {
       // Insert participants
       for ($i=0; $i < count($this->teams); $i++)
@@ -144,10 +158,9 @@
     }
 
     // Insert matches tbl
-    function insert_matches()
+    private function insert_matches()
     {
       // Calculate number of matches
-      $number_of_matches = 0;
       if ($this->format == "Single Elimination")
       {
         $this->number_of_matches = count($this->teams) - 1;
@@ -230,7 +243,7 @@
     }
 
     // Insert into bracket tbl
-    function insert_bracket()
+    private function insert_bracket()
     {
       $first_match_id = $this->last_match_id - $this->number_of_matches + 1;
       $match_id = $first_match_id;
@@ -303,6 +316,29 @@
             $this->mysqli->query($sql) or die($this->mysqli->error);
           }
           $added_teams++;
+        }
+      }
+    }
+
+    private function insert_bracket_rr()
+    {
+      $match_id = $this->last_match_id - $this->number_of_matches + 1;
+      $first_team_id = $this->last_team_id - count($this->teams) + 1;
+
+      $added_teams = 0;
+      for ($i=0; $i < count($this->teams); $i++)
+      {
+        for ($j=$i+1; $j < count($this->teams); $j++)
+        {
+          $sql = "INSERT INTO bracket (matches_tournaments_id, matches_id, teams_id)
+          VALUES (" . $this->tournament_id . "," .  $match_id . "," . ($first_team_id + $i) . ");";
+          $this->mysqli->query($sql) or die($this->mysqli->error);
+
+          $sql = "INSERT INTO bracket (matches_tournaments_id, matches_id, teams_id)
+          VALUES (" . $this->tournament_id . "," .  $match_id . "," . ($first_team_id + $j) . ");";
+          $this->mysqli->query($sql) or die($this->mysqli->error);
+
+          $match_id++;
         }
       }
     }
